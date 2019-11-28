@@ -40,8 +40,8 @@ def get_ssr_config():
 
 
 def ssr_2_surge(ssr_config):
-    surge_config = ssr_config['name'] + ' = external,'
-    surge_config += 'exec = "%(exec_path)s",' % ssr_config
+    surge_config = ssr_config['name'] + ' = '
+    surge_config += 'external, exec = "%(exec_path)s",' % ssr_config
     surge_config += 'local-port = %(local_port)s,' % ssr_config
     surge_config += 'args = "-o", args = "%(obfs)s",' % ssr_config
     surge_config += 'args = "-O", args = "%(method)s",' % ssr_config
