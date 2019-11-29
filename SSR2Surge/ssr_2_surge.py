@@ -13,7 +13,7 @@ ssr_config_url = ''
 # ss-local路径
 exec_path = 'ss-local'
 # 本地端口
-local_port_start = 10123
+local_port_start = 1025
 
 
 def get_ssr_config():
@@ -40,19 +40,19 @@ def get_ssr_config():
 
 
 def ssr_2_surge(ssr_config):
-    surge_config = ssr_config['name'] + ' = '
-    surge_config += 'external, exec = "%(exec_path)s",' % ssr_config
-    surge_config += 'local-port = %(local_port)s,' % ssr_config
-    surge_config += 'args = "-o", args = "%(obfs)s",' % ssr_config
-    surge_config += 'args = "-O", args = "%(method)s",' % ssr_config
-    surge_config += 'args = "-G", args = "%(protoparam)s",' % ssr_config
-    surge_config += 'args = "-s", args = "%(server)s",' % ssr_config
-    surge_config += 'args = "-p", args = "%(server_port)s",' % ssr_config
-    surge_config += 'args = "-l", args = "%(local_port)s",' % ssr_config
-    surge_config += 'args = "-b", args = "127.0.0.1",'
-    surge_config += 'args = "-k", args = "%(password)s",' % ssr_config
-    surge_config += 'args = "-m", args = "%(method)s",' % ssr_config
-    surge_config += 'addresses = "%(server)s"\n' % ssr_config
+    surge_config = ssr_config['name'] + ' ='
+    surge_config += ' external, exec = "%(exec_path)s",' % ssr_config
+    surge_config += ' local-port = %(local_port)s,' % ssr_config
+    surge_config += ' args = "-o", args = "%(obfs)s",' % ssr_config
+    surge_config += ' args = "-O", args = "%(protocol)s",' % ssr_config
+    surge_config += ' args = "-G", args = "%(protoparam)s",' % ssr_config
+    surge_config += ' args = "-s", args = "%(server)s",' % ssr_config
+    surge_config += ' args = "-p", args = "%(server_port)s",' % ssr_config
+    surge_config += ' args = "-l", args = "%(local_port)s",' % ssr_config
+    surge_config += ' args = "-b", args = "127.0.0.1",'
+    surge_config += ' args = "-k", args = "%(password)s",' % ssr_config
+    surge_config += ' args = "-m", args = "%(method)s",' % ssr_config
+    surge_config += ' addresses = "%(server)s"\n' % ssr_config
 
     return surge_config
 
