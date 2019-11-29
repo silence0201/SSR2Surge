@@ -5,7 +5,7 @@
 # @File    : SSR2Surge.py
 # @Project : SSR2Surge
 
-import urllib.request
+import urllib.request as request
 from ssr_parser import *
 
 # SSR订阅地址
@@ -17,7 +17,9 @@ local_port_start = 1025
 
 
 def get_ssr_config():
-    config_response = urllib.request.urlopen(ssr_config_url)
+    headers = {'User-Agent': 'Mozilla/5.0 3578.98 Safari/537.36'}
+    url = request.Request(ssr_config_url, headers=headers)
+    config_response = request.urlopen(url)
     base64_config = config_response.read().decode()
     config_scheme = base64_decode(base64_config)
     config_list = config_scheme.split()
@@ -28,13 +30,19 @@ def get_ssr_config():
     for ssr_scheme in config_list:
         ssr_config = parse_ssr_url(ssr_scheme)
 
+        if ssr_config is None:
+            continue
+
         ssr_config['local_port'] = str(local_port_start + index)
         ssr_config['exec_path'] = exec_path
-        # print(ssr_config)
-        if ssr_config['obfs'] == 'http_simple' :
-            continue
-        surge_config = ssr_2_surge(ssr_config)
+
+        if is_ss(ssr_config):
+            surge_config = ss_2_surge(ssr_config)
+        else:
+            surge_config = ssr_2_surge(ssr_config)
+
         ssr_list.append(surge_config)
+
         index += 1
     return ssr_list
 
@@ -57,8 +65,19 @@ def ssr_2_surge(ssr_config):
     return surge_config
 
 
+def ss_2_surge(ss_config):
+    surge_config = ss_config['name'] + ' ='
+    surge_config += ' ss, %(server)s, %(server_port)s, encrypt-method=%(method)s, password=%(password)s, tfo=true \n' % ss_config
+    return surge_config
+
+
+def is_ss(config):
+    return config['obfs'] == 'http_simple'
+
+
 if __name__ == '__main__':
     surge_list = get_ssr_config()
 
-    with open('surge.conf','w+') as f:
+    with open('surge.list', 'w+') as f:
+        f.write('[Proxy]\n')
         f.writelines(surge_list)

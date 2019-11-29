@@ -10,17 +10,26 @@ import re
 
 
 def fill_padding(base64_encode_str):
-   need_padding = len(base64_encode_str) % 4 != 0
+    need_padding = len(base64_encode_str) % 4 != 0
 
-   if need_padding:
-       missing_padding = 4 - need_padding
-       base64_encode_str += '=' * missing_padding
-   return base64_encode_str
+    if need_padding:
+        missing_padding = 4 - need_padding
+        base64_encode_str += '=' * missing_padding
+    return base64_encode_str
 
 
 def base64_decode(base64_encode_str):
-   base64_encode_str = fill_padding(base64_encode_str)
-   return base64.urlsafe_b64decode(base64_encode_str).decode('utf-8')
+    base64_encode_str = fill_padding(base64_encode_str)
+    return base64.urlsafe_b64decode(base64_encode_str).decode('utf-8')
+
+
+def check_ip(ip):
+    rex_ip = re.compile('^(127\\.0\\.0\\.1)|(localhost)|(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|(172\\.((1[6-9])|('
+                        '2\\d)|(3[01]))\\.\\d{1,3}\\.\\d{1,3})|(192\\.168\\.\\d{1,3}\\.\\d{1,3})$')
+    if rex_ip.match(ip):
+        return False
+    else:
+        return True
 
 
 def parse_ssr_url(ssr_url: str):
@@ -31,7 +40,14 @@ def parse_ssr_url(ssr_url: str):
 
     config = re.split(':', url_body)
 
+    if len(config) < 6:
+        return
+
     ip = config[0]
+
+    if not check_ip(ip):
+        return
+
     port = config[1]
     protocol = config[2]
     method = config[3]
@@ -62,10 +78,9 @@ def parse_ssr_url(ssr_url: str):
                    'password': password,
                    'server_port': port,
                    'protocol': protocol,
-                   'obfsparam' : obfsparam,
-                   'protoparam' : protoparam,
-                   'name' : remarks,
-                   'group' : group
+                   'obfsparam': obfsparam,
+                   'protoparam': protoparam,
+                   'name': remarks,
+                   'group': group
                    })
     return result
-
