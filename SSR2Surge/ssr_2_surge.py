@@ -31,11 +31,11 @@ def get_ssr_config():
         ssr_config['local_port'] = str(local_port_start + index)
         ssr_config['exec_path'] = exec_path
         # print(ssr_config)
-        index += 1
         if ssr_config['obfs'] == 'http_simple' :
             continue
         surge_config = ssr_2_surge(ssr_config)
         ssr_list.append(surge_config)
+        index += 1
     return ssr_list
 
 
